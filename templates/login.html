@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% if title %}
+		<title>{{ title  }}</title>
+	{% else %}
+		<title>Login Page</title>
+	{% endif %}
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+	<form method='post' >
+
+	    <div class="form-field">
+	          <label for="email">Email</label>
+	          <input id="email" name="email" type="email" placeholder="Email" />
+	        </div>
+
+
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Password" />
+        </div>
+
+				<div class="form-options">
+					<div class="checkbox-field">
+						<input id="rememberMe" type="checkbox" class="checkbox" />
+						<label for="rememberMe">Remember Me</label>
+
+					</div>
+					<a href="#">Forgot Password?</a>
+				</div>
+
+				<div class="form-field">
+					<input type="submit" class="btn btn-signin" value="Login" />
+				</div>
+
+				<div class="links">
+				        <a href="#">Privacy Policy</a>
+				        <a href="#">Terms & Conditions</a>
+			</div>
+
+	 </form>
+</body>
+</html>

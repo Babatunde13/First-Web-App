@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% if title %}
+		<title>{{ title  }}</title>
+	{% else %}
+		<title>Login</title>
+	{% endif %}
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}">
+</head>
+<body>
+	<form method="post">
+		<div class="form-field">
+	          <label for="First Name">First Name</label>
+	          <input id="First Name" name="First Name" type="text" placeholder="First Name" />
+	    </div>
+
+	    <div class="form-field">
+	          <label for="Last Name">Last Name</label>
+	          <input id="Last Name" name="Last Name" type="text" placeholder="Last Name" />
+	    </div>
+
+	    <div class="form-field">
+	          <label for="email">Email</label>
+	          <input id="email" name="email" type="email" placeholder="Email" />
+	    </div>
+
+
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input id="password" name='password' type="password" placeholder="Password" />
+        </div>
+
+				<div class="form-options">
+					<div class="checkbox-field">
+						<input id="rememberMe" type="checkbox" class="checkbox" />
+						<label for="rememberMe">Remember Me</label>
+
+					</div>
+					<a href="login.html">Login Instead</a>
+				</div>
+
+				<div class="form-field">
+					<input type="submit" class="btn btn-signin" value="SignUp" />
+				</div>
+
+				<div class="links">
+				        <a href="#">Privacy Policy</a>
+				        <a href="#">Terms & Conditions</a>
+			</div>
+
+	 </form>
+	 {% for key, val in user %}
+	 	<tr>
+	 		<td>{{ key }}</td>
+	 		<td>{{ val }}</td>
+	 	</tr>
+    {% endfor %}
+</body>
+</html>
