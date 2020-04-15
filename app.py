@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, abort
 from forms import RegistrationForm, LoginForm, posts, data, save_db
+from hashlib import sha224
 
 app = Flask(__name__)
 
@@ -20,7 +21,7 @@ def login():
 	if request.method == 'POST':
 		user_email = request.form['email']
 		for d in data:
-			if d['Email'] == user_email and d['Password'] == request.form['password']:
+			if d['Email'] == user_email and d['Password'] == sha224(request.form['password'].encode('utf-8')).hexdigest():
 				user = d['First Name']
 				return redirect(url_for('success', name=user))
 		else:
@@ -35,12 +36,12 @@ def login():
 def signup():
 	if request.method == 'POST':
 		user = request.form['First Name']
-
+		print(request.form['password'])
 		object_user = {
 			'First Name': request.form['First Name'],
 			'Last Name': request.form['Last Name'],
 			'Email': request.form['email'],
-			'Password': request.form['password']
+			'Password': sha224(request.form['password'].encode('utf-8')).hexdigest()
 		}
 		for d in data:
 			if d['Email'] == object_user['Email']:
