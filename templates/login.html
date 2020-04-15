@@ -10,16 +10,18 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
+
+	
+	<p>
+		{{ error }}
+	</p>
+
 	<form method='post' >
 
 	    <div class="form-field">
 	          <label for="email">Email</label>
 	          <input id="email" name="email" type="email" placeholder="Email" />
 	        </div>
-
-			<p>
-				{{ error }}
-			</p>
 
         <div class="form-field">
           <label for="password">Password</label>
