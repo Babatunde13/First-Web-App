@@ -40,6 +40,7 @@ def signup():
 		for d in data:
 			if d['Email'] == object_user['Email']:
 				# alert
+				print('Already a registered user')
 				return redirect(url_for('login'))
 		data.append(object_user)
 		save_db()
