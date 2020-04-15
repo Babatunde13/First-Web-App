@@ -48,7 +48,7 @@ def signup():
 				
 				error = 'Already a registered user'
 				
-				return redirect(url_for('login', error=error, title='Login'))
+				return render_template('login.html', error=error)
 		data.append(object_user)
 		save_db()
 
