@@ -24,7 +24,8 @@ def login():
 				user = d['First Name']
 				return redirect(url_for('success', name=user))
 			
-	return render_template('login.html', title='Login Page')
+	error =''
+	return render_template('login.html', title='Login Page', error=error)
 
 @app.route('/signup/', methods=['POST', 'GET'])
 def signup():
@@ -41,7 +42,7 @@ def signup():
 			if d['Email'] == object_user['Email']:
 				# alert
 				error = 'Already a registered user'
-				print('Already a registered user')
+				# print('Already a registered user')
 				return redirect(url_for('login', error=error))
 		data.append(object_user)
 		save_db()
