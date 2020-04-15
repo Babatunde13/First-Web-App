@@ -46,7 +46,7 @@ def signup():
 		for d in data:
 			if d['Email'] == object_user['Email']:
 				
-				error = 'Already a registered user'
+				error = 'Already a registered user Login again'
 				
 				return render_template('login.html', error=error)
 		data.append(object_user)
