@@ -23,9 +23,13 @@ def login():
 			if d['Email'] == user_email and d['Password'] == request.form['password']:
 				user = d['First Name']
 				return redirect(url_for('success', name=user))
-			
-	error =''
+		else:
+			error ='Invalid Email or Password'
+			return render_template('login.html', title='Login Page', error=error)
+	error=''
 	return render_template('login.html', title='Login Page', error=error)
+
+
 
 @app.route('/signup/', methods=['POST', 'GET'])
 def signup():
