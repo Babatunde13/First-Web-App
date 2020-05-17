@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, abort
+from flask import Flask, render_template, request, url_for, redirect, abort, flash
 from forms import RegistrationForm, LoginForm, posts, data, save_db
 from hashlib import sha224
 
@@ -25,10 +25,9 @@ def login():
 				user = d['First Name']
 				return redirect(url_for('success', name=user))
 		else:
-			error ='Invalid Email or Password'
+			flash('Invalid Email or Password')
 			return render_template('login.html', title='Login Page', error=error)
-	error=''
-	return render_template('login.html', title='Login Page', error=error)
+	return render_template('login.html', title='Login Page')
 
 
 
@@ -36,7 +35,6 @@ def login():
 def signup():
 	if request.method == 'POST':
 		user = request.form['First Name']
-		print(request.form['password'])
 		object_user = {
 			'First Name': request.form['First Name'],
 			'Last Name': request.form['Last Name'],
@@ -45,10 +43,8 @@ def signup():
 		}
 		for d in data:
 			if d['Email'] == object_user['Email']:
-				
-				error = 'Already a registered user Login again'
-				
-				return render_template('login.html', error=error)
+					flash('Already a registered user Login again')
+					return render_template('login.html')
 		data.append(object_user)
 		save_db()
 
@@ -63,7 +59,6 @@ def register():
  
 @app.route("/user/<name>/", methods=['POST', 'GET'])
 def success(name):
-
 	if request.method == 'GET':
 		for d in data:
 			if name == d['First Name']:
