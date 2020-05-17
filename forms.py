@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, EqualTo
 import json
 
 
@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
 	"""docstring for RegistrationForm"""
 
 	username = StringField('Username', validators=[DataRequired(), Length(min=2, max=15)])
-	email = StringField('email', validators=[DataRequired(),Email()])
+	email = StringField('email', validators=[DataRequired()])
 	password = PasswordField('password', validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
 	submit = SubmitField('Sign Up')
@@ -17,7 +17,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
 	"""docstring for LoginForm"""
 
-	email = StringField('email', validators=[DataRequired(),Email()])
+	email = StringField('email', validators=[DataRequired()])
 	password = PasswordField('password', validators=[DataRequired()])
 	remember = BooleanField('Remember Me')
 	submit = SubmitField('Login')
