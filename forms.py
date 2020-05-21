@@ -48,15 +48,3 @@ posts = [
 		'date_posted': 'April 23, 2018'
 	}
 ]
-def load_db():
-	with open('database.json') as f:
-		return json.load(f)
-
-	
-
-def save_db():
-	with open('database.json', 'w') as db:
-		return json.dump(data, db)
-
-
-data = load_db()
