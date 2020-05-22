@@ -11,6 +11,12 @@
 </head>
 <body>
 	<form method="post">
+		{% for message in get_flashed_messages() %}
+		<div class="alert alert-warning" style="text-align: center; color: rgba(219, 23, 23, 0.473); ">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{{ message }}
+		</div>
+		{% endfor %}
 		<div class="form-field">
 	          <label for="First Name">First Name</label>
 	          <input id="First Name" name="First Name" type="text" placeholder="First Name" />
