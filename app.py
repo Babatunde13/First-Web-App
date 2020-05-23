@@ -19,9 +19,6 @@ manager = Manager(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
-login_manager = LoginManager()
-login_manager.session_protection='strong'
-login_manager.login_view='login'
 
 class User(UserMixin, db.Model):
 	__tablename__ = 'users'
@@ -54,9 +51,11 @@ def login():
 @app.route('/signup/', methods=['POST', 'GET'])
 def signup():
 	if request.method == 'POST':
+		
 		user = User(FirstName=request.form['First Name'], LastName=request.form['Last Name'], email=request.form['email'], password=generate_password_hash(request.form['password']))
-		check = User.query.filter_by(email=user.email, password=user.password)
-		if check is not None:
+		print(user.email)
+		check = User.query.filter_by(email=user.email, password=user.password).first()
+		if check is None:
 			db.session.add(user)
 			db.session.commit()
 			return redirect(url_for('success', name=user.FirstName))
@@ -68,11 +67,12 @@ def signup():
 def register():
 	form = RegistrationForm()
 	return render_template('register.html', title='register', form=form)
- 
-@app.route("/home/", methods=['POST', 'GET'])
-def success():
+
+@app.route("/home/<name>/", methods=['POST', 'GET'])
+def success(name):
 	if request.method == 'GET':
 		check = User.query.filter_by(FirstName=name).first()
+		print(check)
 		if name is not None:
 			return render_template('success.html', title=f'Welcome {name}', user=name)
 		return redirect(url_for('login'))
@@ -80,13 +80,6 @@ def success():
 		search = request.form['search']
 		search.replace(' ', '+')
 		return redirect(f'https://www.google.com/search?q={search}')
-	
-@app.route('/logout/')
-@login_required
-def logout():
-	logout_user()
-	flash('You have been logout')
-	return redirect(url_for('home'))
 
 if __name__ == '__main__':
 	app.run(debug=True)
