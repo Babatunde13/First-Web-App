@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, abort, flash
 from forms import RegistrationForm, LoginForm, posts
-from hashlib import sha224
+from flask_login import UserMixin, LoginManager, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_script import Manager
@@ -19,8 +19,11 @@ manager = Manager(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
+login_manager = LoginManager()
+login_manager.session_protection='strong'
+login_manager.login_view='login'
 
-class User(db.Model):
+class User(UserMixin, db.Model):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer, primary_key=True)
 	FirstName = db.Column(db.String(64), index=True)
@@ -32,14 +35,8 @@ class User(db.Model):
 		return f'<user {self.FirstName} {self.LastName}>'
 
 @app.route('/')
-@app.route('/home/')
 def home():
 	return render_template('home.html')
-
-
-@app.route('/about/')
-def about():
-	return render_template('about.html', posts=posts, title='About Page')
 
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
@@ -48,13 +45,11 @@ def login():
 		user = User.query.filter_by(email=user_email).first()
 		if user is None:
 			flash('Inavlid email sign up first')
-			return render_template('signup.html', title='Signup Page')
+			return redirect(url_for('signup', title='Signup Page'))
 		if check_password_hash(user.password, request.form['password']):
 			return redirect(url_for('success', name=user.FirstName))
 		flash('Invalid email or password')
 	return render_template('login.html', title='Login Page')
-
-
 
 @app.route('/signup/', methods=['POST', 'GET'])
 def signup():
@@ -66,7 +61,7 @@ def signup():
 			db.session.commit()
 			return redirect(url_for('success', name=user.FirstName))
 		flash('Already a registered user,  Login!')
-		return render_template('login.html')
+		return redirect(url_for('login', title='Login Page'))
 	return render_template('signup.html', title='SignUp Page')
 
 @app.route("/register/")
@@ -74,8 +69,8 @@ def register():
 	form = RegistrationForm()
 	return render_template('register.html', title='register', form=form)
  
-@app.route("/user/<name>/", methods=['POST', 'GET'])
-def success(name):
+@app.route("/home/", methods=['POST', 'GET'])
+def success():
 	if request.method == 'GET':
 		check = User.query.filter_by(FirstName=name).first()
 		if name is not None:
@@ -85,6 +80,13 @@ def success(name):
 		search = request.form['search']
 		search.replace(' ', '+')
 		return redirect(f'https://www.google.com/search?q={search}')
+	
+@app.route('/logout/')
+@login_required
+def logout():
+	logout_user()
+	flash('You have been logout')
+	return redirect(url_for('home'))
 
 if __name__ == '__main__':
 	app.run(debug=True)
