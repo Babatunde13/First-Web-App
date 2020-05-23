@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, abort, flash
 from forms import RegistrationForm, LoginForm, posts
 from hashlib import sha224
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
@@ -44,11 +45,13 @@ def about():
 def login():
 	if request.method == 'POST':
 		user_email = request.form['email']
-		user = User.query.filter_by(email=user_email, password=sha224(request.form['password'].encode('utf-8')).hexdigest()).first()
+		user = User.query.filter_by(email=user_email).first()
 		if user is None:
-			flash('Inavlid email or password')
-			return render_template('login.html', title='Login Page')
-		return redirect(url_for('success', name=user.FirstName))
+			flash('Inavlid email sign up first')
+			return render_template('signup.html', title='Signup Page')
+		if check_password_hash(user.password, request.form['password']):
+			return redirect(url_for('success', name=user.FirstName))
+		flash('Invalid email or password')
 	return render_template('login.html', title='Login Page')
 
 
@@ -56,7 +59,7 @@ def login():
 @app.route('/signup/', methods=['POST', 'GET'])
 def signup():
 	if request.method == 'POST':
-		user = User(FirstName=request.form['First Name'], LastName=request.form['Last Name'], email=request.form['email'], password=sha224(request.form['password'].encode('utf-8')).hexdigest())
+		user = User(FirstName=request.form['First Name'], LastName=request.form['Last Name'], email=request.form['email'], password=generate_password_hash(request.form['password']))
 		check = User.query.filter_by(email=user.email, password=user.password)
 		if check is not None:
 			db.session.add(user)
